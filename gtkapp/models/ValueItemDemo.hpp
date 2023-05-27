@@ -3,7 +3,7 @@
 #include <string>
 #include <ostream>
 
-namespace gtkapp
+namespace gtkapp::models
 {
     class ValueItemDemo
     {

@@ -3,7 +3,7 @@
 #include <string>
 #include <memory>
 
-namespace gtkapp
+namespace gtkapp::models
 {
     class PimplItemDemo
     {

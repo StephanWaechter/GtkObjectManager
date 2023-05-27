@@ -1,31 +1,32 @@
 #include "PimplItemDemo.hpp"
 
 using namespace std;
+using namespace gtkapp::models;
 
-gtkapp::PimplItemDemo::PimplItemDemo() : PimplItemDemo{ "<Default>" }
+gtkapp::models::PimplItemDemo::PimplItemDemo() : PimplItemDemo{ "<Default>" }
 {
 	cout << "New " << *this << endl;
 }
 
-gtkapp::PimplItemDemo::PimplItemDemo(std::string const& name) : pimpl{ std::make_unique<Pimpl>(name) }
+gtkapp::models::PimplItemDemo::PimplItemDemo(std::string const& name) : pimpl{ std::make_unique<Pimpl>(name) }
 {
 	cout << "New " << *this << endl;
 }
 
-gtkapp::PimplItemDemo::PimplItemDemo(PimplItemDemo&& other) noexcept
+gtkapp::models::PimplItemDemo::PimplItemDemo(PimplItemDemo&& other) noexcept
 {
 	std::swap(pimpl, other.pimpl);
 	cout << "Move " << *this << endl;
 }
 
-gtkapp::PimplItemDemo& gtkapp::PimplItemDemo::operator=(PimplItemDemo&& other) noexcept
+PimplItemDemo& gtkapp::models::PimplItemDemo::operator=(PimplItemDemo&& other) noexcept
 {
 	std::swap(pimpl, other.pimpl);
 	cout << "=Move " << *this << endl;
 	return *this;
 }
 
-gtkapp::PimplItemDemo::~PimplItemDemo()
+gtkapp::models::PimplItemDemo::~PimplItemDemo()
 {
 	if (pimpl)
 	{

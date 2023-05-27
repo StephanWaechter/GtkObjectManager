@@ -5,7 +5,7 @@
 #include "PimplItem.hpp"
 #include "PimplItemDemo.hpp"
 
-namespace gtkapp
+namespace gtkapp::models
 {
     enum class State
     {

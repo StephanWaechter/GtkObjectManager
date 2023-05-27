@@ -1,36 +1,37 @@
 #include "ValueItemDemo.hpp"
 
 using namespace std;
+using namespace gtkapp::models;
 
-gtkapp::ValueItemDemo::ValueItemDemo() : ValueItemDemo{ "<Default>" }
+gtkapp::models::ValueItemDemo::ValueItemDemo() : ValueItemDemo{ "<Default>" }
 {
 	cout << "New " << *this << endl;
 }
 
-gtkapp::ValueItemDemo::ValueItemDemo(std::string const& name) : Name(name)
+gtkapp::models::ValueItemDemo::ValueItemDemo(std::string const& name) : Name(name)
 {
 	cout << "New " << *this << endl;
 }
 
-gtkapp::ValueItemDemo::ValueItemDemo(ValueItemDemo&& other) noexcept
+gtkapp::models::ValueItemDemo::ValueItemDemo(ValueItemDemo&& other) noexcept
 {
 	std::swap(Name, other.Name);
 	cout << "Move " << *this << endl;
 }
 
-gtkapp::ValueItemDemo& gtkapp::ValueItemDemo::operator=(ValueItemDemo&& other) noexcept
+ValueItemDemo& gtkapp::models::ValueItemDemo::operator=(ValueItemDemo&& other) noexcept
 {
 	std::swap(Name, other.Name);
 	cout << "=Move " << *this << endl;
 	return *this;
 }
 
-gtkapp::ValueItemDemo::~ValueItemDemo()
+gtkapp::models::ValueItemDemo::~ValueItemDemo()
 {
 	cout << "Delete " << *this << endl;
 }
 
-gtkapp::ValueItemDemo::ValueItemDemo(const ValueItemDemo& other)
+gtkapp::models::ValueItemDemo::ValueItemDemo(const ValueItemDemo& other)
 {
 	Name = other.Name;
 	cout << "Copy" << *this << endl;
