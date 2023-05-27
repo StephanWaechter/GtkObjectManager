@@ -1,4 +1,4 @@
-add_executable(GtkObjectManager main.cpp)
+add_executable(GtkObjectManager main.cpp "NavigationWindow.cpp" "NavigationWindow.hpp")
 add_subdirectory(viewmodels)
 add_subdirectory(models)
 add_subdirectory(views)

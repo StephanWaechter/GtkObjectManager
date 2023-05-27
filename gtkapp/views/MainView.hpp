@@ -7,16 +7,32 @@
 
 namespace gtkapp::views
 {
-    class MainView : public Gtk::Window
+    class MainView : public Gtk::Grid
     {
     struct Impl;
     public:
         MainView();
+        MainView(viewmodels::MainViewModel* dataContext) : MainView()
+        {
+            bind(dataContext);
+        }
         ~MainView();
-        void bind(std::unique_ptr<viewmodels::MainViewModel> dataContext);
+        void bind(viewmodels::MainViewModel* dataContext);
+
+        void add_item(models::Item& item);
+        void select_item(models::Item& item);
+        void clear_selection();
+        void remove_item(models::Item const& item);
+
+        Gtk::Button* Add;
+        Gtk::Button* Delete;
+        Gtk::Button* Clear;
+        Gtk::Entry* New_item_entry;
+        Gtk::ListBox* ListBox;
 
     private:
-        std::unique_ptr<viewmodels::MainViewModel> DataContext;
-        std::unique_ptr<Impl> pimpl;
+        std::vector<sigc::connection> connections;
+        std::map<models::Item::Id, Gtk::ListBoxRow*> ListItems_;
+        viewmodels::MainViewModel* DataContext;
     };
 } // namespace gtkapp

@@ -6,177 +6,176 @@ using namespace std::chrono_literals;
 
 namespace gtkapp::views
 {
-    struct MainView::Impl : public Gtk::Grid
+    struct MyListRow : public Gtk::ListBoxRow
     {
-        struct MyListRow : public Gtk::ListBoxRow
+        MyListRow(models::Item& _item)
+            : label{ _item.get_Name() }, item{ _item }
         {
-            MyListRow(models::Item & _item)
-            : label{_item.get_Name()}, item{_item}
-            {
-                set_child(label);
-                set_halign(Gtk::Align::START);
-                label.set_size_request(150); 
-                show();
-            }
-
-            Gtk::Label label;
-            models::Item & item;
-        };
-
-        Gtk::Label Label{"New Item"};
-        Gtk::Label Title{"Items"};
-        Gtk::Entry Entry;
-        Gtk::Button Add{"Add"};
-        Gtk::Button Delete{"Delete"};
-        Gtk::Button Clear{"Clear"};
-        Gtk::ScrolledWindow Scroller;
-        Gtk::ListBox ListBox;
-        std::map<models::Item::Id , std::shared_ptr<MyListRow>> ListItems;
-        Impl()
-        {
-            Add.set_sensitive(false);
-            Add.set_hexpand(true);
-            Delete.set_sensitive(false);
-            Delete.set_expand(false);
-            Label.set_hexpand(true);
-            Entry.set_hexpand(true);
-            Scroller.set_vexpand(true);
-            Scroller.set_hexpand(true);
-            
-            attach(Label, 0, 0); attach(Entry , 1, 0, 2); attach(Add, 3, 0);
-            
-            Scroller.set_child(ListBox);
-            attach(Title, 0, 1, 4);
-            attach(Scroller, 0, 2, 4);
-            
-            attach(Delete, 0, 3, 2);
-            attach(Clear , 2, 3, 2);
-
-
+            set_child(label);
+            set_halign(Gtk::Align::START);
+            label.set_size_request(150);
             show();
         }
 
-        void add_item(models::Item & item)
-        {
-            auto id = item.get_Id();
-            auto row = std::make_shared<MyListRow>(item);
-            std::cout << "add " << item << " to view" << std::endl;
-
-            ListItems[id] = row;
-            ListBox.append(*row);
-            row->show();
-        }
-
-        void select_item(models::Item & item)
-        {
-            auto& row = ListItems[item.get_Id()];
-            ListBox.select_row(*row);
-        }
-
-        void clear_selection()
-        {
-            ListBox.unselect_all();
-        }
-
-        void remove_item(models::Item const& item)
-        {
-            auto& row = ListItems[item.get_Id()];
-            ListBox.remove(*row);
-            row->show();
-        }
-
+        Gtk::Label label;
+        models::Item& item;
     };
 
-    MainView::MainView() : pimpl{std::make_unique<MainView::Impl>()}
+    void MainView::add_item(models::Item& item)
     {
-        set_child(*pimpl);
+        auto id = item.get_Id();
+        auto row = Gtk::make_managed<MyListRow>(item);
+        std::cout << "add " << item << " to view" << std::endl;
+
+        ListItems_[id] = row;
+        ListBox->append(*row);
+        row->show();
+    }
+
+    void MainView::select_item(models::Item& item)
+    {
+        auto& row = ListItems_[item.get_Id()];
+        ListBox->select_row(*row);
+    }
+
+    void MainView::clear_selection()
+    {
+        ListBox->unselect_all();
+    }
+
+    void MainView::remove_item(models::Item const& item)
+    {
+        auto row = ListItems_[item.get_Id()];
+        ListBox->remove(*row);
+        ListItems_.erase(row);
+    }
+
+    MainView::MainView() : DataContext{nullptr}
+    {
+        auto new_label = Gtk::make_managed<Gtk::Label>( "New Item" );
+        auto list_title = Gtk::make_managed<Gtk::Label>("Items");
+        auto scroller = Gtk::make_managed<Gtk::ScrolledWindow>();
+
+        New_item_entry = Gtk::make_managed<Gtk::Entry>();
+        Add = Gtk::make_managed<Gtk::Button>( "Add" );
+        Delete = Gtk::make_managed<Gtk::Button>( "Delete" );
+        Clear = Gtk::make_managed<Gtk::Button>("Clear");
+        ListBox = Gtk::make_managed<Gtk::ListBox>();
+
+        Add->set_sensitive(false);
+        Add->set_hexpand(true);
+        Delete->set_sensitive(false);
+        Delete->set_expand(false);
+        new_label->set_hexpand(true);
+        New_item_entry->set_hexpand(true);
+        scroller->set_vexpand(true);
+        scroller->set_hexpand(true);
+        scroller->set_child(*ListBox);
+
+        New_item_entry->signal_changed().connect(
+            [&]
+            {
+                bool notext = New_item_entry->get_text().size() == 0;
+                Add->set_sensitive(!notext);
+            }
+        );
+
+        Delete->signal_clicked().connect(
+            [&]
+            {
+                auto row = (MyListRow*)ListBox->get_selected_row();
+                DataContext->remove_Item(row->item);
+            }
+            );
+
+        Add->signal_clicked().connect(
+            [&]
+            {
+                auto item = models::Item(New_item_entry->get_text());
+                DataContext->add_Item(std::move(item));
+                New_item_entry->set_text("");
+            }
+        );
+
+        attach(*new_label, 0, 0); attach(*New_item_entry, 1, 0, 2); attach(*Add, 3, 0);
+        attach(*list_title, 0, 1, 4);
+        attach(*scroller, 0, 2, 4);
+
+        attach(*Delete, 0, 3, 2);
+        attach(*Clear, 2, 3, 2);
+
+        show();
     }
     
     MainView::~MainView()
     {
+        for (auto& con : connections)
+        {
+            con.disconnect();
+        }
     }
     
-    void MainView::bind(std::unique_ptr<viewmodels::MainViewModel> dataContext)
+    void MainView::bind(viewmodels::MainViewModel* dataContext)
     {
-        DataContext.reset(dataContext.release());
+        DataContext = dataContext;
         for(auto & item : DataContext->get_Items())
         {
-            pimpl->add_item(item);
+            add_item(item);
         }
 
-        auto user_row_selected = pimpl->ListBox.signal_selected_rows_changed().connect(
+        auto user_row_selected = ListBox->signal_selected_rows_changed().connect(
             [&]
             {
-                auto row = (Impl::MyListRow*) pimpl->ListBox.get_selected_row();
+                auto row = (MyListRow*) ListBox->get_selected_row();
                 if(row != nullptr) DataContext->select_item(&(row->item));
                 else DataContext->select_item();
             }
         );
 
-        DataContext->signal_item_selected().connect(
-            [&, user_row_selected] (models::Item * item) mutable
+        sigc::connection connection;
+        connection = DataContext->signal_item_selected().connect(
+            [&, user_row_selected](models::Item* item) mutable
             {
                 user_row_selected.block(true);
-                if(item != nullptr)
+                if (item != nullptr)
                 {
-                    pimpl->select_item(*item);
-                    pimpl->Delete.set_sensitive(true);
-                    pimpl->Clear.set_sensitive(true);
+                    select_item(*item);
+                    Delete->set_sensitive(true);
+                    Clear->set_sensitive(true);
                 }
                 else
                 {
-                    pimpl->clear_selection();
-                    pimpl->Delete.set_sensitive(false);
-                    pimpl->Clear.set_sensitive(false);
+                    clear_selection();
+                    Delete->set_sensitive(false);
+                    Clear->set_sensitive(false);
                 }
                 user_row_selected.block(false);
             }
         );
+        connections.push_back(connection);
 
-        pimpl->Delete.signal_clicked().connect(
-            [&]
-            {
-                auto row = (Impl::MyListRow*) pimpl->ListBox.get_selected_row();
-                DataContext->remove_Item(row->item);
-            }
-        );
-
-        pimpl->Add.signal_clicked().connect(
-            [&] 
-            {
-                auto item = models::Item(pimpl->Entry.get_text());
-                DataContext->add_Item(std::move(item));
-                pimpl->Entry.set_text("");
-            }
-        );
-
-        pimpl->Clear.signal_clicked().connect(
+        connection = Clear->signal_clicked().connect(
             [&]
             {
                 DataContext->select_item();
             }
         );
+        connections.push_back(connection);
 
-        pimpl->Entry.signal_changed().connect(
-            [&] 
-            {
-                bool notext = pimpl->Entry.get_text().size() == 0;
-                pimpl->Add.set_sensitive(!notext);
-            }
-        );
-
-        DataContext->signal_item_added().connect(
+        connection = DataContext->signal_item_added().connect(
             [&] (models::Item & item)
             {
-                pimpl->add_item(item);
+                add_item(item);
             }
         );
+        connections.push_back(connection);
 
-        DataContext->signal_item_removed().connect(
+        connection = DataContext->signal_item_removed().connect(
             [&] (models::Item const& item)
             {
-                pimpl->remove_item(item);
+                remove_item(item);
             }
         );
+        connections.push_back(connection);
     }
 }
