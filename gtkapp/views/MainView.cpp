@@ -23,7 +23,7 @@ namespace gtkapp::views
             Item & item;
         };
 
-        Gtk::Label Label{"Add Item"};
+        Gtk::Label Label{"New Item"};
         Gtk::Label Title{"Items"};
         Gtk::Entry Entry;
         Gtk::Button Add{"Add"};
@@ -35,17 +35,24 @@ namespace gtkapp::views
         Impl()
         {
             Add.set_sensitive(false);
+            Add.set_hexpand(true);
             Delete.set_sensitive(false);
-            attach(Label , 0, 0);
-            attach(Entry , 0, 1);
-            attach(Add   , 0, 2);
-            attach(Delete, 0, 3);
-            attach(Clear , 0, 4);
-
+            Delete.set_expand(false);
+            Label.set_hexpand(true);
+            Entry.set_hexpand(true);
+            Scroller.set_vexpand(true);
+            Scroller.set_hexpand(true);
+            
+            attach(Label, 0, 0); attach(Entry , 1, 0, 2); attach(Add, 3, 0);
+            
             Scroller.set_child(ListBox);
-            attach(Title  , 1, 0);
-            attach(Scroller, 1, 1, 1, 4);
-            Scroller.set_size_request(150);
+            attach(Title, 0, 1, 4);
+            attach(Scroller, 0, 2, 4);
+            
+            attach(Delete, 0, 3, 2);
+            attach(Clear , 2, 3, 2);
+
+
             show();
         }
 

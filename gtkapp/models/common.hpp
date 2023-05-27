@@ -10,24 +10,14 @@ namespace gtkapp
         Inactive
     };
 
-
-
     class Item
     {
-        struct ItemData
-        {
-            ItemData(std::string const& name) : Name{name} {}
-            std::string Name;
-        };
-
-        std::unique_ptr<ItemData> data{nullptr};
-
     public:
         using Id = void const* const;
-        Id get_Id() const { return data.get(); }
+        Id get_Id() const { return this; }
         Item() = default;
-        Item(std::string const& name) : data{std::make_unique<ItemData>(name)} {}
-        inline std::string const& get_Name() const { return data->Name; }
+        Item(std::string const& name) : Name(name) {}
+        inline std::string const& get_Name() const { return Name; }
 
         private:
             std::string Name;

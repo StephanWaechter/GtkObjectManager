@@ -13,22 +13,11 @@ int main(int argc, const char* argv[])
         {
             mainWindow = std::make_unique<gtkapp::views::MainView>();
             auto mainViewModel = std::make_unique<gtkapp::viewmodels::MainViewModel>();
-            std::thread(
-                [vp = mainViewModel.get()]
-                {
-                    for(auto & item : vp->get_Items())
-                    {
-                        std::this_thread::sleep_for(1s);
-                        vp->select_item(&item);
-                    }
-                    std::this_thread::sleep_for(1s);
-                    vp->select_item();
-                }
-            ).detach();
 
             mainWindow->bind(
                 std::move(mainViewModel)
             );
+            mainWindow->set_size_request(320, 480);
 
 
 
