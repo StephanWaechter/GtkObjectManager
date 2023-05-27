@@ -60,7 +60,7 @@ namespace gtkapp::views
         {
             auto id = item.get_Id();
             auto row = std::make_shared<MyListRow>(item);
-            std::cout << "add " << item.get_Name() << " at " << row << std::endl;
+            std::cout << "add " << item << " to view" << std::endl;
 
             ListItems[id] = row;
             ListBox.append(*row);
@@ -116,8 +116,6 @@ namespace gtkapp::views
         DataContext->signal_item_selected.connect(
             [&, user_row_selected] (Item * item) mutable
             {
-                
-                
                 user_row_selected.block(true);
                 if(item != nullptr)
                 {

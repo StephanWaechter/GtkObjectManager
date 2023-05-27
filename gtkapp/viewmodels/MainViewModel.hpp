@@ -26,7 +26,7 @@ namespace gtkapp::viewmodels
         }
 
     private:
-        State m_State;
+        State m_State{ State::Inactive };
     public:
         sigc::signal<void(State const&)> signal_state_changed;
         inline State const& get_State() const { return m_State; }
@@ -53,7 +53,7 @@ namespace gtkapp::viewmodels
         }
 
     private:
-        Item* m_selected_item;
+        Item* m_selected_item{ nullptr };
     
     public:
         inline Item* get_selected_item() noexcept
@@ -62,21 +62,6 @@ namespace gtkapp::viewmodels
         }
 
         sigc::signal<void(Item* item)> signal_item_selected;
-        inline void select_item(Item* item = nullptr)
-        {
-            if(item == nullptr)
-            {
-                std::cout << "Selection Cleared" << std::endl;
-                signal_item_selected.emit(nullptr);
-                return;
-            }
-            std::cout << "Selected?: " << item->get_Name() << std::endl;
-            if(item != m_selected_item)
-            {
-                m_selected_item = item;
-                std::cout << "Selected:  " << item->get_Name() << std::endl;
-                signal_item_selected.emit(item);
-            }
-        }
+        void select_item(Item* item = nullptr);
     };
 } // namespace gtkapp
