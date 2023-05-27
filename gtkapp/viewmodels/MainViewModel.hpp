@@ -27,41 +27,32 @@ namespace gtkapp::viewmodels
 
     private:
         models::State m_State{ models::State::Inactive };
+        sigc::signal<void(models::State const&)> signal_state_changed_;
     public:
-        sigc::signal<void(models::State const&)> signal_state_changed;
-        inline models::State const& get_State() const { return m_State; }
-        inline void set_State(models::State const& value)
-        {
-            OnPropertyChanged(value, m_State, signal_state_changed);
-        }
+        sigc::signal<void(models::State const&)> signal_state_changed() const;
+        models::State const& get_State() const;
+        void set_State(models::State const& value);
+
 
     private:
         models::Items m_Items;
+        sigc::signal<void(models::Item&)> signal_item_added_;
+        sigc::signal<void(models::Item const&)> signal_item_removed_;
+
     public:
-        inline models::Items & get_Items() { return m_Items; }
-        sigc::signal<void(models::Item &)> signal_item_added;
-        inline void add_Item(models::Item item)
-        {
-            m_Items.push_back(std::move(item));
-            signal_item_added.emit(m_Items.back());
-        }
-        sigc::signal<void(models::Item const&)> signal_item_removed;
-        inline void remove_Item(models::Item const& item)
-        {
-            signal_item_removed.emit(item);
-            m_Items.remove(item);
-        }
+        models::Items& get_Items();
+        sigc::signal<void(models::Item &)> signal_item_added() const;
+        sigc::signal<void(models::Item const&)> signal_item_removed() const;
+        void add_Item(models::Item item);
+        void remove_Item(models::Item const& item);      
 
     private:
         models::Item* m_selected_item{ nullptr };
+        sigc::signal<void(models::Item* item)> signal_item_selected_;
     
     public:
-        inline models::Item* get_selected_item() noexcept
-        {
-            return m_selected_item;
-        }
-
-        sigc::signal<void(models::Item* item)> signal_item_selected;
+        models::Item* get_selected_item() noexcept;
+        sigc::signal<void(models::Item* item)> signal_item_selected() const;
         void select_item(models::Item* item = nullptr);
     };
 } // namespace gtkapp

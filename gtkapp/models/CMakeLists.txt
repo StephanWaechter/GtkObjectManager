@@ -4,7 +4,7 @@ target_sources(GtkObjectManager PRIVATE
     ValueItem.hpp
     ValueItemDemo.cpp
     ValueItemDemo.hpp
-    PimpItem.hpp
+    PimplItem.hpp
     PimplItemDemo.cpp
     PimplItemDemo.hpp
 )

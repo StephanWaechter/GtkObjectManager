@@ -113,7 +113,7 @@ namespace gtkapp::views
             }
         );
 
-        DataContext->signal_item_selected.connect(
+        DataContext->signal_item_selected().connect(
             [&, user_row_selected] (models::Item * item) mutable
             {
                 user_row_selected.block(true);
@@ -165,14 +165,14 @@ namespace gtkapp::views
             }
         );
 
-        DataContext->signal_item_added.connect(
+        DataContext->signal_item_added().connect(
             [&] (models::Item & item)
             {
                 pimpl->add_item(item);
             }
         );
 
-        DataContext->signal_item_removed.connect(
+        DataContext->signal_item_removed().connect(
             [&] (models::Item const& item)
             {
                 pimpl->remove_item(item);
