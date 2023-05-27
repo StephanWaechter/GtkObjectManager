@@ -45,9 +45,10 @@ namespace gtkapp::views
 
     void MainView::remove_item(models::Item const& item)
     {
-        auto row = ListItems_[item.get_Id()];
+        auto id = item.get_Id();
+        auto row = ListItems_[id];
         ListBox->remove(*row);
-        ListItems_.erase(row);
+        ListItems_.erase(id);
     }
 
     MainView::MainView() : DataContext{nullptr}
