@@ -71,6 +71,8 @@ namespace gtkapp::views
         New_item_entry->set_hexpand(true);
         scroller->set_vexpand(true);
         scroller->set_hexpand(true);
+        ListBox->set_hexpand(true);
+        ListBox->set_vexpand(true);
         scroller->set_child(*ListBox);
 
         New_item_entry->signal_changed().connect(
@@ -132,6 +134,7 @@ namespace gtkapp::views
                 else DataContext->select_item();
             }
         );
+        connections.push_back(user_row_selected);
 
         sigc::connection connection;
         connection = DataContext->signal_item_selected().connect(
