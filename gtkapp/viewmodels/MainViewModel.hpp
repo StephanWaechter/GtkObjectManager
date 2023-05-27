@@ -26,42 +26,42 @@ namespace gtkapp::viewmodels
         }
 
     private:
-        State m_State{ State::Inactive };
+        models::State m_State{ models::State::Inactive };
     public:
-        sigc::signal<void(State const&)> signal_state_changed;
-        inline State const& get_State() const { return m_State; }
-        inline void set_State(State const& value)
+        sigc::signal<void(models::State const&)> signal_state_changed;
+        inline models::State const& get_State() const { return m_State; }
+        inline void set_State(models::State const& value)
         {
             OnPropertyChanged(value, m_State, signal_state_changed);
         }
 
     private:
-        Items m_Items;
+        models::Items m_Items;
     public:
-        inline Items & get_Items() { return m_Items; }
-        sigc::signal<void(Item &)> signal_item_added;
-        inline void add_Item(Item item)
+        inline models::Items & get_Items() { return m_Items; }
+        sigc::signal<void(models::Item &)> signal_item_added;
+        inline void add_Item(models::Item item)
         {
             m_Items.push_back(std::move(item));
             signal_item_added.emit(m_Items.back());
         }
-        sigc::signal<void(Item const&)> signal_item_removed;
-        inline void remove_Item(Item const& item)
+        sigc::signal<void(models::Item const&)> signal_item_removed;
+        inline void remove_Item(models::Item const& item)
         {
             signal_item_removed.emit(item);
             m_Items.remove(item);
         }
 
     private:
-        Item* m_selected_item{ nullptr };
+        models::Item* m_selected_item{ nullptr };
     
     public:
-        inline Item* get_selected_item() noexcept
+        inline models::Item* get_selected_item() noexcept
         {
             return m_selected_item;
         }
 
-        sigc::signal<void(Item* item)> signal_item_selected;
-        void select_item(Item* item = nullptr);
+        sigc::signal<void(models::Item* item)> signal_item_selected;
+        void select_item(models::Item* item = nullptr);
     };
 } // namespace gtkapp

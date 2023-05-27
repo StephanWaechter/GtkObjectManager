@@ -1,5 +1,7 @@
 #include "MainViewModel.hpp"
 
+using namespace gtkapp::models;
+
 namespace gtkapp::viewmodels
 {
     MainViewModel::MainViewModel()

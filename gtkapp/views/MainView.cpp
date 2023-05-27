@@ -10,7 +10,7 @@ namespace gtkapp::views
     {
         struct MyListRow : public Gtk::ListBoxRow
         {
-            MyListRow(Item & _item)
+            MyListRow(models::Item & _item)
             : label{_item.get_Name()}, item{_item}
             {
                 set_child(label);
@@ -20,7 +20,7 @@ namespace gtkapp::views
             }
 
             Gtk::Label label;
-            Item & item;
+            models::Item & item;
         };
 
         Gtk::Label Label{"New Item"};
@@ -31,7 +31,7 @@ namespace gtkapp::views
         Gtk::Button Clear{"Clear"};
         Gtk::ScrolledWindow Scroller;
         Gtk::ListBox ListBox;
-        std::map<Item::Id , std::shared_ptr<MyListRow>> ListItems;
+        std::map<models::Item::Id , std::shared_ptr<MyListRow>> ListItems;
         Impl()
         {
             Add.set_sensitive(false);
@@ -56,7 +56,7 @@ namespace gtkapp::views
             show();
         }
 
-        void add_item(Item & item)
+        void add_item(models::Item & item)
         {
             auto id = item.get_Id();
             auto row = std::make_shared<MyListRow>(item);
@@ -67,7 +67,7 @@ namespace gtkapp::views
             row->show();
         }
 
-        void select_item(Item & item)
+        void select_item(models::Item & item)
         {
             auto& row = ListItems[item.get_Id()];
             ListBox.select_row(*row);
@@ -78,7 +78,7 @@ namespace gtkapp::views
             ListBox.unselect_all();
         }
 
-        void remove_item(Item const& item)
+        void remove_item(models::Item const& item)
         {
             auto& row = ListItems[item.get_Id()];
             ListBox.remove(*row);
@@ -114,7 +114,7 @@ namespace gtkapp::views
         );
 
         DataContext->signal_item_selected.connect(
-            [&, user_row_selected] (Item * item) mutable
+            [&, user_row_selected] (models::Item * item) mutable
             {
                 user_row_selected.block(true);
                 if(item != nullptr)
@@ -144,7 +144,7 @@ namespace gtkapp::views
         pimpl->Add.signal_clicked().connect(
             [&] 
             {
-                auto item = Item(pimpl->Entry.get_text());
+                auto item = models::Item(pimpl->Entry.get_text());
                 DataContext->add_Item(std::move(item));
                 pimpl->Entry.set_text("");
             }
@@ -166,14 +166,14 @@ namespace gtkapp::views
         );
 
         DataContext->signal_item_added.connect(
-            [&] (Item & item)
+            [&] (models::Item & item)
             {
                 pimpl->add_item(item);
             }
         );
 
         DataContext->signal_item_removed.connect(
-            [&] (Item const& item)
+            [&] (models::Item const& item)
             {
                 pimpl->remove_item(item);
             }
