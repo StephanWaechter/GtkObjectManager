@@ -9,7 +9,6 @@ namespace gtkapp::views
 {
     class MainView : public Gtk::Grid
     {
-    struct Impl;
     public:
         MainView();
         MainView(viewmodels::MainViewModel* dataContext) : MainView()
@@ -24,14 +23,12 @@ namespace gtkapp::views
         void clear_selection();
         void remove_item(models::Item const& item);
 
-        Gtk::Button* Add;
-        Gtk::Button* Delete;
-        Gtk::Button* Clear;
-        Gtk::Entry* New_item_entry;
-        Gtk::ListBox* ListBox;
-
+        Gtk::Button Add;
+        Gtk::Button Delete;
+        Gtk::Button Clear;
+        Gtk::ListBox ListBox;
+        sigc::connection row_changed;
     private:
-        std::vector<sigc::connection> connections;
         std::map<models::Item::Id, Gtk::ListBoxRow*> ListItems_;
         viewmodels::MainViewModel* DataContext;
     };

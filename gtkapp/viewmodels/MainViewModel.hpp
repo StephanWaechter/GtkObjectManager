@@ -7,13 +7,16 @@
 
 namespace gtkapp::viewmodels
 {
-    class MainViewModel
+    class MainViewModel : sigc::trackable
     {
     private:
         
     public:
         MainViewModel();
         ~MainViewModel();
+
+        std::function<void(void)> CreateNewItem;
+        std::function<void(void)> RetrunMain;
 
     private:
         template<typename T> static void OnPropertyChanged(T const& value, T& ref_value, sigc::signal<void(T const&)>& signal)
@@ -32,7 +35,6 @@ namespace gtkapp::viewmodels
         sigc::signal<void(models::State const&)> signal_state_changed() const;
         models::State const& get_State() const;
         void set_State(models::State const& value);
-
 
     private:
         models::Items m_Items;

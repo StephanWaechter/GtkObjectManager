@@ -71,14 +71,15 @@ namespace gtkapp::viewmodels
     {
         if (item != m_selected_item)
         {
+            m_selected_item = item;
             if (item == nullptr)
             {
                 std::cout << "Selection Cleared" << std::endl;
                 signal_item_selected_.emit(nullptr);
                 return;
             }
-            else {
-                m_selected_item = item;
+            else 
+            {
                 std::cout << "Selected:  " << *item << std::endl;
                 signal_item_selected_.emit(item);
             }
