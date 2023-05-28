@@ -18,7 +18,8 @@ namespace gtkapp::views
 
 		void bind(viewmodels::MainViewModel* dataContext);
 	private:
-		
+		void on_create_clicked();
+		void on_cancel_clicked();
 		viewmodels::MainViewModel* DataContext;
 	};
 }

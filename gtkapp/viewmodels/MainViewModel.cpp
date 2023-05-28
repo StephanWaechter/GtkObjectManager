@@ -57,17 +57,17 @@ namespace gtkapp::viewmodels
         m_Items.remove(item);
     }
 
-    models::Item* MainViewModel::get_selected_item() noexcept
+    models::Item const* MainViewModel::get_selected_item() noexcept
     {
         return m_selected_item;
     }
     
-    sigc::signal<void(models::Item* item)> MainViewModel::signal_item_selected() const
+    sigc::signal<void(models::Item const* item)> MainViewModel::signal_item_selected() const
     {
         return signal_item_selected_;
     }
 
-    void MainViewModel::select_item(Item* item)
+    void MainViewModel::select_item(Item const* item)
     {
         if (item != m_selected_item)
         {

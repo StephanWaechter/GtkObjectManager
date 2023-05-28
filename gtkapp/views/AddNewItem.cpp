@@ -25,7 +25,8 @@ namespace gtkapp::views
                 [&](bool is_valid)-> void
                 {
                     Create.set_sensitive(is_valid);
-                }
+                },
+                *this
             )
         );
     }
@@ -35,30 +36,27 @@ namespace gtkapp::views
         std::cout << "~AddNewItem" << std::endl;
     }
 
+    void AddNewItem::on_create_clicked()
+    {
+        DataContext->add_Item(Item.create_item());
+        DataContext->RetrunMain();
+    }
+
+    void AddNewItem::on_cancel_clicked()
+    {
+        DataContext->RetrunMain();
+    }
+
     void AddNewItem::bind(viewmodels::MainViewModel* dataContext)
     {
         DataContext = dataContext;
 
-        Create.signal_clicked().connect( 
-            sigc::track_obj(
-                [&]() -> void
-                {
-                    DataContext->add_Item(Item.create_item());
-                    DataContext->RetrunMain();
-                },
-                *this
-            )
+        Create.signal_clicked().connect(
+            sigc::mem_fun(*this, &AddNewItem::on_create_clicked)
         );
 
         Cancel.signal_clicked().connect(
-            sigc::track_obj(
-                [&]() -> void
-                {
-                    DataContext->RetrunMain();
-                }
-                , *this
-            )
+            sigc::mem_fun(*this, &AddNewItem::on_cancel_clicked)
         );
-
     }
 }

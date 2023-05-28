@@ -1,5 +1,6 @@
 #pragma once
 #include <gtkapp/models/common.hpp>
+#include <gtkapp/widgets/ItemsTreeView.hpp>
 #include <gtkapp/viewmodels/MainViewModel.hpp>
 #include <gtkmm.h>
 #include <string>
@@ -18,31 +19,13 @@ namespace gtkapp::views
         ~MainView();
         void bind(viewmodels::MainViewModel* dataContext);
 
-        void add_item(models::Item& item);
-        void select_item(models::Item& item);
-        void clear_selection();
-        void remove_item(models::Item const& item);
-
         Gtk::Button Add;
         Gtk::Button Delete;
         Gtk::Button Clear;
-        Gtk::TreeView ItemsView;
-        sigc::connection row_changed;
+        widgets::ItemsTreeView ItemsView;
+        
     private:
-        struct ItemColumn : public Gtk::TreeModelColumnRecord
-        {
-            ItemColumn()
-            {
-                add(name);
-                add(item);
-            }
-            Gtk::TreeModelColumn<std::string> name;
-            Gtk::TreeModelColumn<models::Item*> item;
-        };
-
-        ItemColumn ItemColumn_;
-        Glib::RefPtr<Gtk::ListStore> ItemList_;
-        std::map <models::Item::Id, Gtk::TreeModel::iterator> Item_to_row;
+        void on_selection_changed(models::Item const* item);
         viewmodels::MainViewModel* DataContext;
     };
 } // namespace gtkapp

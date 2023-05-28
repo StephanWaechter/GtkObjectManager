@@ -6,36 +6,7 @@ using namespace std::chrono_literals;
 
 namespace gtkapp::views
 {
-    void MainView::add_item(models::Item& item)
-    {
-        auto id = item.get_Id();
-        std::cout << "add " << item << " to view" << std::endl;
-        auto row = ItemList_->append();
-        Item_to_row[id] = row;
-        (*row)[ItemColumn_.name] = item.get_Name();
-        (*row)[ItemColumn_.item] = &item;
 
-    }
-
-    void MainView::select_item(models::Item& item)
-    {
-        auto id = item.get_Id();
-        auto& row = Item_to_row[id];
-        ItemsView.get_selection()->select(row);
-    }
-
-    void MainView::clear_selection()
-    {
-        ItemsView.get_selection()->unselect_all();
-    }
-
-    void MainView::remove_item(models::Item const& item)
-    {
-        auto id = item.get_Id();
-        auto& row = Item_to_row[id];
-        ItemList_->erase(row);
-        Item_to_row.erase(id);
-    }
 
     MainView::MainView()
         : 
@@ -47,10 +18,6 @@ namespace gtkapp::views
         std::cout << "MainView" << std::endl;
         auto list_title = Gtk::make_managed<Gtk::Label>("Items");
         auto scroller = Gtk::make_managed<Gtk::ScrolledWindow>();
-
-        ItemList_ = Gtk::ListStore::create(ItemColumn_);
-        ItemsView.set_model(ItemList_);
-        ItemsView.append_column("name", ItemColumn_.name);
 
         Add.set_sensitive(true);
         Add.set_vexpand(false);
@@ -74,52 +41,28 @@ namespace gtkapp::views
         std::cout << "~MainView" << std::endl;
     }
 
+    void MainView::on_selection_changed(models::Item const* item)
+    {
+        ItemsView.update_selection(item);
+        Delete.set_sensitive(item != nullptr);
+        Clear.set_sensitive(item != nullptr);
+    }
+
+
     void MainView::bind(viewmodels::MainViewModel* dataContext)
     {
         DataContext = dataContext;
-        Delete.signal_clicked().connect(
-            [&]
-            {
-                auto row = ItemsView.get_selection()->get_selected();
-                auto item = (*row)[ItemColumn_.item];
-                if (item == nullptr) return;
-                DataContext->remove_Item(*item);
-            }
-        );
-
-        Add.signal_clicked().connect(
-            [&]
-            {
-                DataContext->CreateNewItem();
-            }
-        );
-
         for(auto & item : DataContext->get_Items())
         {
-            add_item(item);
+            ItemsView.add_item(item);
         }
+        on_selection_changed(DataContext->get_selected_item());
 
-        auto selected_item = DataContext->get_selected_item();
-        
-        if (selected_item != nullptr)
-        {
-            std::cout << "selected_item: " << *selected_item << std::endl;
-            Delete.set_sensitive(true);
-            select_item(*selected_item);
-        }
-        else
-        {
-            std::cout << "selected_item: <null>" << std::endl;
-            Delete.set_sensitive(false);
-            clear_selection();
-        }
-
-        row_changed = ItemsView.get_selection()->signal_changed().connect(
+        ItemsView.signal_selection_changed().connect(
             sigc::track_obj(
                 [&]
                 {
-                    auto row = ItemsView.get_selection()->get_selected();
-                    auto item = (*row)[ItemColumn_.item];
+                    auto item = ItemsView.get_selected_item();
                     if (item == nullptr) return;
                     DataContext->select_item(item);
                 },
@@ -127,58 +70,33 @@ namespace gtkapp::views
             )
         );
 
-        DataContext->signal_item_selected().connect(
-            sigc::track_obj(
-                [&](models::Item* item) mutable
-                {
-                    row_changed.block(true);
-                    if (item != nullptr)
-                    {
-                        select_item(*item);
-                        Delete.set_sensitive(true);
-                        Clear.set_sensitive(true);
-                    }
-                    else
-                    {
-                        clear_selection();
-                        Delete.set_sensitive(false);
-                        Clear.set_sensitive(false);
-                    }
-                    row_changed.block(false);
-                },
-                *this
-            )
+        Delete.signal_clicked().connect(
+            [&]
+            {
+                auto item = ItemsView.get_selected_item();
+                if (item == nullptr) return;
+                DataContext->remove_Item(*item);
+            }
         );
 
+        Add.signal_clicked().connect(
+            [&] { DataContext->on_create_new_item(); }
+         );
+
         Clear.signal_clicked().connect(
-            sigc::track_obj(
-                [&]
-                {
-                    DataContext->select_item();
-                },
-                *this
-            )
+            [&] { DataContext->select_item(nullptr); }
+        );
+
+        DataContext->signal_item_selected().connect(
+            sigc::mem_fun(*this, &MainView::on_selection_changed)
         );
 
         DataContext->signal_item_added().connect(
-            sigc::track_obj(
-                [&](models::Item& item)
-                {
-                    add_item(item);
-                },
-                *this
-            )
+            sigc::mem_fun(ItemsView, &widgets::ItemsTreeView::add_item)
         );
 
         DataContext->signal_item_removed().connect(
-            sigc::track_obj(
-                [&] (models::Item const& item)
-                {
-                    remove_item(item);
-                }
-                ,
-                *this
-            )
+            sigc::mem_fun(ItemsView, &widgets::ItemsTreeView::remove_item)
         );
     }
 }

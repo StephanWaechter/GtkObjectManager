@@ -7,7 +7,7 @@
 
 namespace gtkapp::viewmodels
 {
-    class MainViewModel : sigc::trackable
+    class MainViewModel : public sigc::trackable
     {
     private:
         
@@ -15,6 +15,7 @@ namespace gtkapp::viewmodels
         MainViewModel();
         ~MainViewModel();
 
+        void on_create_new_item() { CreateNewItem(); }
         std::function<void(void)> CreateNewItem;
         std::function<void(void)> RetrunMain;
 
@@ -49,12 +50,12 @@ namespace gtkapp::viewmodels
         void remove_Item(models::Item const& item);      
 
     private:
-        models::Item* m_selected_item{ nullptr };
-        sigc::signal<void(models::Item* item)> signal_item_selected_;
+        models::Item const* m_selected_item{ nullptr };
+        sigc::signal<void(models::Item const* item)> signal_item_selected_;
     
     public:
-        models::Item* get_selected_item() noexcept;
-        sigc::signal<void(models::Item* item)> signal_item_selected() const;
-        void select_item(models::Item* item = nullptr);
+        models::Item const* get_selected_item() noexcept;
+        sigc::signal<void(models::Item const* item)> signal_item_selected() const;
+        void select_item(models::Item const* item = nullptr);
     };
 } // namespace gtkapp
