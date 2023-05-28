@@ -6,50 +6,35 @@ using namespace std::chrono_literals;
 
 namespace gtkapp::views
 {
-    struct MyListRow : public Gtk::ListBoxRow
-    {
-        MyListRow(models::Item& _item)
-            : label{ _item.get_Name() }, item{ _item }
-        {
-            set_child(label);
-            set_halign(Gtk::Align::FILL);
-            label.set_hexpand(true);
-
-            show();
-        }
-
-        Gtk::Label label;
-        models::Item& item;
-    };
-
     void MainView::add_item(models::Item& item)
     {
         auto id = item.get_Id();
-        auto row = Gtk::make_managed<MyListRow>(item);
         std::cout << "add " << item << " to view" << std::endl;
+        auto row = ItemList_->append();
+        Item_to_row[id] = row;
+        (*row)[ItemColumn_.name] = item.get_Name();
+        (*row)[ItemColumn_.item] = &item;
 
-        ListItems_[id] = row;
-        ListBox.append(*row);
-        row->show();
     }
 
     void MainView::select_item(models::Item& item)
     {
-        auto& row = ListItems_[item.get_Id()];
-        ListBox.select_row(*row);
+        auto id = item.get_Id();
+        auto& row = Item_to_row[id];
+        ItemsView.get_selection()->select(row);
     }
 
     void MainView::clear_selection()
     {
-        ListBox.unselect_all();
+        ItemsView.get_selection()->unselect_all();
     }
 
     void MainView::remove_item(models::Item const& item)
     {
         auto id = item.get_Id();
-        auto row = ListItems_[id];
-        ListBox.remove(*row);
-        ListItems_.erase(id);
+        auto& row = Item_to_row[id];
+        ItemList_->erase(row);
+        Item_to_row.erase(id);
     }
 
     MainView::MainView()
@@ -63,19 +48,23 @@ namespace gtkapp::views
         auto list_title = Gtk::make_managed<Gtk::Label>("Items");
         auto scroller = Gtk::make_managed<Gtk::ScrolledWindow>();
 
+        ItemList_ = Gtk::ListStore::create(ItemColumn_);
+        ItemsView.set_model(ItemList_);
+        ItemsView.append_column("name", ItemColumn_.name);
+
         Add.set_sensitive(true);
         Add.set_vexpand(false);
         Delete.set_vexpand(false);
         Clear.set_vexpand(false);
         scroller->set_expand(true);
-        ListBox.set_expand(true);
-        scroller->set_child(ListBox);
+        ItemsView.set_expand(true);
+        scroller->set_child(ItemsView);
 
         attach(*list_title, 0, 0, 3);
         attach(*scroller  , 0, 1, 3);
         attach(Add        , 0, 2);
         attach(Delete     , 1, 2);
-        attach(Clear      , 2, 2);
+        attach(Clear      , 2, 2);      
 
         show();
     }
@@ -91,8 +80,10 @@ namespace gtkapp::views
         Delete.signal_clicked().connect(
             [&]
             {
-                auto row = (MyListRow*)ListBox.get_selected_row();
-            DataContext->remove_Item(row->item);
+                auto row = ItemsView.get_selection()->get_selected();
+                auto item = (*row)[ItemColumn_.item];
+                if (item == nullptr) return;
+                DataContext->remove_Item(*item);
             }
         );
 
@@ -114,24 +105,23 @@ namespace gtkapp::views
         {
             std::cout << "selected_item: " << *selected_item << std::endl;
             Delete.set_sensitive(true);
-            ListBox.select_row(
-                *ListItems_[selected_item->get_Id()]
-            );
+            select_item(*selected_item);
         }
         else
         {
             std::cout << "selected_item: <null>" << std::endl;
-            ListBox.unselect_all();
             Delete.set_sensitive(false);
+            clear_selection();
         }
 
-        row_changed = ListBox.signal_selected_rows_changed().connect(
+        row_changed = ItemsView.get_selection()->signal_changed().connect(
             sigc::track_obj(
                 [&]
                 {
-                    auto row = (MyListRow*) ListBox.get_selected_row();
-                    if(row != nullptr) DataContext->select_item(&(row->item));
-                    else DataContext->select_item();
+                    auto row = ItemsView.get_selection()->get_selected();
+                    auto item = (*row)[ItemColumn_.item];
+                    if (item == nullptr) return;
+                    DataContext->select_item(item);
                 },
                 *this
             )

@@ -26,10 +26,23 @@ namespace gtkapp::views
         Gtk::Button Add;
         Gtk::Button Delete;
         Gtk::Button Clear;
-        Gtk::ListBox ListBox;
+        Gtk::TreeView ItemsView;
         sigc::connection row_changed;
     private:
-        std::map<models::Item::Id, Gtk::ListBoxRow*> ListItems_;
+        struct ItemColumn : public Gtk::TreeModelColumnRecord
+        {
+            ItemColumn()
+            {
+                add(name);
+                add(item);
+            }
+            Gtk::TreeModelColumn<std::string> name;
+            Gtk::TreeModelColumn<models::Item*> item;
+        };
+
+        ItemColumn ItemColumn_;
+        Glib::RefPtr<Gtk::ListStore> ItemList_;
+        std::map <models::Item::Id, Gtk::TreeModel::iterator> Item_to_row;
         viewmodels::MainViewModel* DataContext;
     };
 } // namespace gtkapp
