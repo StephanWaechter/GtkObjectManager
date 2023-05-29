@@ -51,8 +51,6 @@ namespace gtkapp::widgets
         return get_selection()->signal_changed();
     }
 
- 
-
     void ItemsTreeView::select_item(models::Item const& item)
     {
         auto id = item.get_Id();

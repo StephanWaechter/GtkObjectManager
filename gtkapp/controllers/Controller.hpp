@@ -5,19 +5,15 @@
 #include <iostream>
 #include <optional>
 
-namespace gtkapp::viewmodels
+namespace gtkapp::controllers
 {
-    class MainViewModel : public sigc::trackable
+    class Controller : public sigc::trackable
     {
     private:
         
     public:
-        MainViewModel();
-        ~MainViewModel();
-
-        void on_create_new_item() { CreateNewItem(); }
-        std::function<void(void)> CreateNewItem;
-        std::function<void(void)> RetrunMain;
+        Controller();
+        ~Controller();
 
     private:
         template<typename T> static void OnPropertyChanged(T const& value, T& ref_value, sigc::signal<void(T const&)>& signal)

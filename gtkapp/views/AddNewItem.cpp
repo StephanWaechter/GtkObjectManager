@@ -29,6 +29,16 @@ namespace gtkapp::views
                 *this
             )
         );
+
+        Create.signal_clicked().connect(
+            sigc::mem_fun(*this, &AddNewItem::on_create_clicked)
+        );
+
+        Cancel.signal_clicked().connect(
+            sigc::mem_fun(*this, &AddNewItem::on_cancel_clicked)
+        );
+
+        show();
     }
 
     AddNewItem::~AddNewItem()
@@ -38,25 +48,27 @@ namespace gtkapp::views
 
     void AddNewItem::on_create_clicked()
     {
-        DataContext->add_Item(Item.create_item());
-        DataContext->RetrunMain();
+        signal_create_new_item.emit(
+            Item.create_item()
+        );
     }
 
     void AddNewItem::on_cancel_clicked()
     {
-        DataContext->RetrunMain();
+        signal_cancel.emit();
     }
 
-    void AddNewItem::bind(viewmodels::MainViewModel* dataContext)
+    void bind(MainWindow& mainWindow, controllers::Controller& controller, AddNewItem& view)
     {
-        DataContext = dataContext;
-
-        Create.signal_clicked().connect(
-            sigc::mem_fun(*this, &AddNewItem::on_create_clicked)
+        view.signal_create_new_item.connect(
+            [&](models::Item& item) {
+                controller.add_Item(std::move(item));
+                mainWindow.OpenMainView();
+            }
         );
 
-        Cancel.signal_clicked().connect(
-            sigc::mem_fun(*this, &AddNewItem::on_cancel_clicked)
+        view.signal_cancel.connect(
+            sigc::mem_fun(mainWindow, &MainWindow::OpenMainView)
         );
     }
 }

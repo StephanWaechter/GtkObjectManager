@@ -2,24 +2,28 @@
 #include <gtkmm.h>
 #include <gtkapp/models/common.hpp>
 #include <gtkapp/widgets/ItemWidget.hpp>
-#include <gtkapp/viewmodels/MainViewModel.hpp>
+#include <gtkapp/controllers/Controller.hpp>
+#include <gtkapp/MainWindow.hpp>
 
 namespace gtkapp::views
 {
 	struct AddNewItem : public Gtk::Box
 	{
 		AddNewItem();
-		AddNewItem(viewmodels::MainViewModel* dataContext) : AddNewItem() { bind(dataContext); }
 		~AddNewItem();
 
 		widgets::ItemWidget Item;
 		Gtk::Button Create;
 		Gtk::Button Cancel;
 
-		void bind(viewmodels::MainViewModel* dataContext);
+		sigc::signal<void(models::Item& item)> signal_create_new_item;
+		sigc::signal<void(void)> signal_cancel;
+
 	private:
 		void on_create_clicked();
 		void on_cancel_clicked();
-		viewmodels::MainViewModel* DataContext;
+		controllers::Controller* DataContext;
 	};
+
+	void bind(MainWindow& mainWindow, controllers::Controller& controller, AddNewItem& view);
 }

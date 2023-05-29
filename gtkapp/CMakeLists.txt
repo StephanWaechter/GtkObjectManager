@@ -1,7 +1,13 @@
-add_executable(GtkObjectManager main.cpp "NavigationWindow.cpp" "NavigationWindow.hpp" "views/AddNewItem.cpp" "widgets/ItemWidget.cpp"  "widgets/ItemsTreeView.cpp")
-add_subdirectory(viewmodels)
+add_executable(GtkObjectManager main.cpp 
+    "NavigationWindow.cpp"
+    "NavigationWindow.hpp"
+    "MainWindow.cpp"
+    "MainWindow.hpp"
+)
+add_subdirectory(controllers)
 add_subdirectory(models)
 add_subdirectory(views)
+add_subdirectory(widgets)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTKMM REQUIRED IMPORTED_TARGET gtkmm-4.0)
