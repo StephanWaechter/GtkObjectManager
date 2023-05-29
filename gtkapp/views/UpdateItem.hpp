@@ -9,7 +9,7 @@ namespace gtkapp::views
 {
 	struct UpdateItem : public Gtk::Box
 	{
-		UpdateItem(models::Item& item);
+		UpdateItem();
 		~UpdateItem();
 
 		widgets::ItemWidget Item;
@@ -17,15 +17,13 @@ namespace gtkapp::views
 		Gtk::Button Cancel;
 
 		sigc::signal<void(models::Item& item)> signal_update_item;
+		virtual void on_update_item(models::Item& item);
 		sigc::signal<void(void)> signal_cancel;
-		
-		models::Item& ItemRef;
+		virtual void on_cancel();
 
 	private:
 		
 		void on_update_clicked();
 		void on_cancel_clicked();
 	};
-
-	void bind(MainWindow& mainWindow, controllers::Controller& controller, UpdateItem& view);
 }

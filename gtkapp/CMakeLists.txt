@@ -3,7 +3,7 @@ add_executable(GtkObjectManager main.cpp
     "NavigationWindow.hpp"
     "MainWindow.cpp"
     "MainWindow.hpp"
- "views/UpdateItem.cpp")
+ "views/UpdateItem.cpp" "controllers/UpdateItem.cpp" "controllers/MainView.cpp")
 add_subdirectory(controllers)
 add_subdirectory(models)
 add_subdirectory(views)

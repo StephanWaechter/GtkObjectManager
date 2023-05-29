@@ -19,9 +19,13 @@ namespace gtkapp::views
         widgets::ItemsTreeView ItemsView;
         
         sigc::signal<void(void)> signal_request_new_item;
-        sigc::signal<void(const models::Item& item)> signal_request_delete_item;
-        sigc::signal<void(models::Item& item)> signal_request_update_item;
+        virtual void on_request_new_item();
+        sigc::signal<void(const models::Item& item)> signal_delete_item;
+        virtual void on_delete_item(const models::Item& item);
+        sigc::signal<void(models::Item& item)> signal_update_item;
+        virtual void on_update_item(models::Item& item);
         sigc::signal<void(const models::Item* item)> signal_selected_item_changed;
+        virtual void on_selected_item_changed(models::Item* item);
         
         void set_selected_item(models::Item const* item);
     private:
@@ -34,6 +38,4 @@ namespace gtkapp::views
         void on_delete_clicked();
         void on_items_view_selected_item_changed();
     };
-
-    void bind(MainWindow& mainWindow, controllers::Controller& controller, MainView& view);
 } // namespace gtkapp

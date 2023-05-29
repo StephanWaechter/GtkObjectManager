@@ -48,27 +48,25 @@ namespace gtkapp::views
 
     void AddNewItem::on_create_clicked()
     {
-        signal_create_new_item.emit(
+        on_create_new_item(
             Item.create_item()
         );
     }
 
     void AddNewItem::on_cancel_clicked()
     {
+        on_cancel();
+    }
+
+    void AddNewItem::on_cancel()
+    {
         signal_cancel.emit();
     }
 
-    void bind(MainWindow& mainWindow, controllers::Controller& controller, AddNewItem& view)
+    void AddNewItem::on_create_new_item(models::Item item)
     {
-        view.signal_create_new_item.connect(
-            [&](auto& item) {
-                controller.add_Item(std::move(item));
-                mainWindow.OpenMainView();
-            }
-        );
-
-        view.signal_cancel.connect(
-            [&] { mainWindow.OpenMainView(); }
+        signal_create_new_item.emit(
+            item
         );
     }
 }

@@ -64,6 +64,11 @@ namespace gtkapp::views
 
     void MainView::on_add_clicked()
     {
+        on_request_new_item();
+    }
+
+    void MainView::on_request_new_item()
+    {
         signal_request_new_item.emit();
     }
 
@@ -71,59 +76,34 @@ namespace gtkapp::views
     {
         auto item = ItemsView.get_selected_item();
         if (item == nullptr) return;
-        signal_request_delete_item.emit(*item);
+        on_delete_item(*item);
+    }
+
+    void MainView::on_delete_item(const models::Item& item)
+    {
+        signal_delete_item.emit(item);
     }
 
     void MainView::on_update_clicked()
     {
         auto item = ItemsView.get_selected_item();
         if (item == nullptr) return;
-        signal_request_update_item.emit(*item);
+        on_update_item(*item);
+    }
+
+    void MainView::on_update_item(models::Item& item)
+    {
+        signal_update_item.emit(item);
     }
 
     void MainView::on_items_view_selected_item_changed()
     {
         auto item = ItemsView.get_selected_item();
-        signal_selected_item_changed.emit(item);
+        on_selected_item_changed(item);
     }
 
-    void bind(MainWindow& mainWindow, controllers::Controller& controller, MainView& view)
+    void  MainView::on_selected_item_changed(models::Item* item)
     {
-        for(auto & item : controller.get_Items())
-        {
-            view.ItemsView.add_item(item);
-        }
-
-        view.set_selected_item(
-            controller.get_selected_item()
-        );
-
-        view.signal_request_new_item.connect(
-            [&] { mainWindow.OpenAddNewItem(); }
-        );
-
-        view.signal_request_update_item.connect(
-            [&] (auto& item) { mainWindow.OpenUpdateItem(item); }
-        );
-
-        view.signal_request_delete_item.connect(
-            [&] (auto& item) { controller.remove_Item(item); }
-        );
-
-        view.signal_selected_item_changed.connect(
-            [&] (auto* item) { controller.select_item(item); }
-        );
-
-        controller.signal_item_selected().connect(
-            sigc::mem_fun(view, &MainView::set_selected_item)
-        );
-
-        controller.signal_item_added().connect(
-            sigc::mem_fun(view.ItemsView, &widgets::ItemsTreeView::add_item)
-        );
-
-        controller.signal_item_removed().connect(
-            sigc::mem_fun(view.ItemsView, &widgets::ItemsTreeView::remove_item)
-        );
+        signal_selected_item_changed.emit(item);
     }
 }

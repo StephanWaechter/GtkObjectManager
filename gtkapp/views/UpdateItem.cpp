@@ -4,7 +4,7 @@
 
 namespace gtkapp::views
 {
-    UpdateItem::UpdateItem(models::Item& item) : ItemRef{ item }, Update { "Update" }, Cancel{ "Cancel" }
+    UpdateItem::UpdateItem() : Update { "Update" }, Cancel{ "Cancel" }
     {
         std::cout << "UpdateItem" << std::endl;
         set_orientation(Gtk::Orientation::VERTICAL);
@@ -20,7 +20,6 @@ namespace gtkapp::views
         box->append(Cancel);
         append(*box);
 
-        Item.set_item_values(ItemRef);
         Item.signal_is_valid_item_changed().connect(
             sigc::track_obj(
                 [&](bool is_valid)-> void
@@ -49,27 +48,24 @@ namespace gtkapp::views
 
     void UpdateItem::on_update_clicked()
     {
-        signal_update_item.emit(
+        on_update_item(
             Item.create_item()
         );
     }
 
-    void UpdateItem::on_cancel_clicked()
+    void UpdateItem::on_update_item(models::Item& item)
     {
-        signal_cancel.emit();
+        signal_update_item.emit(item);
     }
 
-    void bind(MainWindow& mainWindow, controllers::Controller& controller, UpdateItem& view)
+    void UpdateItem::on_cancel_clicked()
     {
-        view.signal_update_item.connect(
-            [&](models::Item& item) {
-                controller.update_item(view.ItemRef, item);
-                mainWindow.OpenMainView();
-            }
-        );
+        on_cancel();
+    }
+    
 
-        view.signal_cancel.connect(
-            [&] { mainWindow.OpenMainView(); }
-        );
+    void UpdateItem::on_cancel()
+    {
+        signal_cancel.emit();
     }
 }
