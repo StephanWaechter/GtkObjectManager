@@ -20,6 +20,7 @@ namespace gtkapp::views
         box->append(Cancel);
         append(*box);
 
+        Create.set_sensitive(false);
         Item.signal_is_valid_item_changed().connect(
             sigc::track_obj(
                 [&](bool is_valid)-> void
