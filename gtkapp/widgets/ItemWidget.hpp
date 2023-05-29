@@ -13,6 +13,8 @@ namespace gtkapp::widgets
 		bool is_valid_item();
 		models::Item create_item();
 
+		void set_item_values(const models::Item& item);
+
 	private:
 		sigc::signal<void(bool)> signal_is_valid_item_changed_;
 		bool is_valid_item_{ false };

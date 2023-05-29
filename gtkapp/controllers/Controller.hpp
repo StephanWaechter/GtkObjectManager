@@ -28,6 +28,7 @@ namespace gtkapp::controllers
     private:
         models::State m_State{ models::State::Inactive };
         sigc::signal<void(models::State const&)> signal_state_changed_;
+
     public:
         sigc::signal<void(models::State const&)> signal_state_changed() const;
         models::State const& get_State() const;
@@ -35,15 +36,18 @@ namespace gtkapp::controllers
 
     private:
         models::Items m_Items;
+        sigc::signal<void(models::Item&)> signal_item_updated_;
         sigc::signal<void(models::Item&)> signal_item_added_;
         sigc::signal<void(models::Item const&)> signal_item_removed_;
 
     public:
         models::Items& get_Items();
-        sigc::signal<void(models::Item &)> signal_item_added() const;
+        sigc::signal<void(models::Item&)> signal_item_updated() const;
+        sigc::signal<void(models::Item&)> signal_item_added() const;
         sigc::signal<void(models::Item const&)> signal_item_removed() const;
+        void update_item(models::Item & item, models::Item const& new_values);
         void add_Item(models::Item item);
-        void remove_Item(models::Item const& item);      
+        void remove_Item(models::Item const& item);
 
     private:
         models::Item const* m_selected_item{ nullptr };

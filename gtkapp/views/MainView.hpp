@@ -20,7 +20,7 @@ namespace gtkapp::views
         
         sigc::signal<void(void)> signal_request_new_item;
         sigc::signal<void(const models::Item& item)> signal_request_delete_item;
-        sigc::signal<void(const models::Item& item)> signal_request_update_item;
+        sigc::signal<void(models::Item& item)> signal_request_update_item;
         sigc::signal<void(const models::Item* item)> signal_selected_item_changed;
         
         void set_selected_item(models::Item const* item);

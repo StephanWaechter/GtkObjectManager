@@ -35,6 +35,11 @@ namespace gtkapp::controllers
         return m_Items;
     }
 
+    sigc::signal<void(models::Item&)> Controller::signal_item_updated() const
+    {
+        return signal_item_updated_;
+    }
+
     sigc::signal<void(models::Item&)> Controller::signal_item_added() const
     {
         return signal_item_added_;
@@ -43,6 +48,11 @@ namespace gtkapp::controllers
     sigc::signal<void(models::Item const&)> Controller::signal_item_removed() const
     {
         return signal_item_removed_;
+    }
+
+    void Controller::update_item(models::Item& item, models::Item const & new_values)
+    {
+        item.Update(new_values);
     }
 
     void Controller::add_Item(models::Item item)

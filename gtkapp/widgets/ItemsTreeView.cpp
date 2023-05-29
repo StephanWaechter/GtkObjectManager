@@ -10,13 +10,13 @@ namespace gtkapp::widgets
         append_column("name", Columns_.name);
     }
 
-    models::Item const* ItemsTreeView::get_selected_item()
+    models::Item * ItemsTreeView::get_selected_item()
     {
         auto row = get_selection()->get_selected();
         return (*row)[Columns_.item];
     }
 
-    void ItemsTreeView::add_item(models::Item const& item)
+    void ItemsTreeView::add_item(models::Item & item)
     {
         auto id = item.get_Id();
         std::cout << "add " << item << " to view" << std::endl;

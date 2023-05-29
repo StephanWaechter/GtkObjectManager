@@ -28,6 +28,11 @@ namespace gtkapp::widgets
 		return models::Item(Name.get_text());
 	}
 
+	void ItemWidget::set_item_values(const models::Item& item)
+	{
+		Name.set_text( item.get_Name() );
+	}
+
 	void ItemWidget::update_is_valid_item()
 	{
 		bool is_valid;

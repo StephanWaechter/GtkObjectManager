@@ -1,68 +1,69 @@
 #pragma once
 #include <gtkapp/models/common.hpp>
-#include "AddNewItem.hpp"
+#include "UpdateItem.hpp"
 
 namespace gtkapp::views
 {
-    AddNewItem::AddNewItem() : Create{ "Create" }, Cancel{ "Cancel" }
+    UpdateItem::UpdateItem(models::Item& item) : ItemRef{ item }, Update { "Update" }, Cancel{ "Cancel" }
     {
-        std::cout << "AddNewItem" << std::endl;
+        std::cout << "UpdateItem" << std::endl;
         set_orientation(Gtk::Orientation::VERTICAL);
         auto frame = Gtk::make_managed<Gtk::Frame>();
         frame->set_child(Item);
         append(*frame);
         frame->set_expand(true);
-        Create.set_hexpand(true);
+        Update.set_hexpand(true);
         Cancel.set_hexpand(true);
         auto box = Gtk::make_managed<Gtk::Box>();
         box->set_orientation(Gtk::Orientation::HORIZONTAL);
-        box->append(Create);
+        box->append(Update);
         box->append(Cancel);
         append(*box);
 
+        Item.set_item_values(ItemRef);
         Item.signal_is_valid_item_changed().connect(
             sigc::track_obj(
                 [&](bool is_valid)-> void
                 {
-                    Create.set_sensitive(is_valid);
+                    Update.set_sensitive(is_valid);
                 },
                 *this
             )
         );
 
-        Create.signal_clicked().connect(
-            sigc::mem_fun(*this, &AddNewItem::on_create_clicked)
+        Update.signal_clicked().connect(
+            sigc::mem_fun(*this, &UpdateItem::on_update_clicked)
         );
 
         Cancel.signal_clicked().connect(
-            sigc::mem_fun(*this, &AddNewItem::on_cancel_clicked)
+            sigc::mem_fun(*this, &UpdateItem::on_cancel_clicked)
         );
 
         show();
     }
 
-    AddNewItem::~AddNewItem()
+    UpdateItem::~UpdateItem()
     {
-        std::cout << "~AddNewItem" << std::endl;
+        std::cout << "~UpdateItem" << std::endl;
     }
 
-    void AddNewItem::on_create_clicked()
+    void UpdateItem::on_update_clicked()
     {
-        signal_create_new_item.emit(
+        signal_update_item.emit(
             Item.create_item()
         );
     }
 
-    void AddNewItem::on_cancel_clicked()
+    void UpdateItem::on_cancel_clicked()
     {
         signal_cancel.emit();
     }
 
-    void bind(MainWindow& mainWindow, controllers::Controller& controller, AddNewItem& view)
+    void bind(MainWindow& mainWindow, controllers::Controller& controller, UpdateItem& view)
     {
-        view.signal_create_new_item.connect(
-            [&](auto& item) {
-                controller.add_Item(std::move(item));
+        view.signal_update_item.connect(
+            [&](models::Item& item) {
+                controller.update_item(view.ItemRef, item);
                 mainWindow.OpenMainView();
             }
         );

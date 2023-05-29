@@ -13,12 +13,12 @@ namespace gtkapp::widgets
                 add(item);
             }
             Gtk::TreeModelColumn<std::string> name;
-            Gtk::TreeModelColumn<models::Item const *> item;
+            Gtk::TreeModelColumn<models::Item *> item;
         };
     public:
         ItemsTreeView();
-        models::Item const* get_selected_item();
-        void add_item(models::Item const& item);
+        models::Item * get_selected_item();
+        void add_item(models::Item & item);
         void remove_item(models::Item const& item);
         void update_selection(models::Item const* item);
         Glib::SignalProxy<void(void)> signal_selection_changed();

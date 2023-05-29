@@ -7,22 +7,25 @@
 
 namespace gtkapp::views
 {
-	struct AddNewItem : public Gtk::Box
+	struct UpdateItem : public Gtk::Box
 	{
-		AddNewItem();
-		~AddNewItem();
+		UpdateItem(models::Item& item);
+		~UpdateItem();
 
 		widgets::ItemWidget Item;
-		Gtk::Button Create;
+		Gtk::Button Update;
 		Gtk::Button Cancel;
 
-		sigc::signal<void(models::Item& item)> signal_create_new_item;
+		sigc::signal<void(models::Item& item)> signal_update_item;
 		sigc::signal<void(void)> signal_cancel;
+		
+		models::Item& ItemRef;
 
 	private:
-		void on_create_clicked();
+		
+		void on_update_clicked();
 		void on_cancel_clicked();
 	};
 
-	void bind(MainWindow& mainWindow, controllers::Controller& controller, AddNewItem& view);
+	void bind(MainWindow& mainWindow, controllers::Controller& controller, UpdateItem& view);
 }

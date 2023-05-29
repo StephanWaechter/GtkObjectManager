@@ -20,6 +20,7 @@ namespace gtkapp::models
         Id get_Id() const { return pimpl.get(); }
         Item() {};
         Item(std::string const& name) : pimpl{ std::make_unique<ItemData>(name) } {};
+        
 
         inline std::string const& get_Name() const { return pimpl->Name; }
         inline Item Clone(const Item& other)
@@ -27,6 +28,11 @@ namespace gtkapp::models
             Item pimp;
             pimp.pimpl = std::make_unique<ItemData>(*other.pimpl);
             return pimp;
+        }
+
+        inline void Update(const Item& other)
+        {
+            *(this->pimpl) = *other.pimpl;
         }
     };
     inline std::ostream& operator<< (std::ostream& os, const Item& item)
