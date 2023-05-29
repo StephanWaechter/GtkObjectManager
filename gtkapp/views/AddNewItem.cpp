@@ -68,7 +68,7 @@ namespace gtkapp::views
         );
 
         view.signal_cancel.connect(
-            sigc::mem_fun(mainWindow, &MainWindow::OpenMainView)
+            [&] { mainWindow.OpenMainView(); }
         );
     }
 }

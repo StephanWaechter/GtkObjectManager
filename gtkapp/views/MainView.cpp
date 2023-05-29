@@ -44,7 +44,7 @@ namespace gtkapp::views
         );
 
         ItemsView.signal_selection_changed().connect(
-            sigc::mem_fun(*this, &MainView::on_selected_item_changed)
+            sigc::mem_fun(*this, &MainView::on_items_view_selected_item_changed)
         );
 
         show();
@@ -81,7 +81,7 @@ namespace gtkapp::views
         signal_request_update_item.emit(*item);
     }
 
-    void MainView::on_selected_item_changed()
+    void MainView::on_items_view_selected_item_changed()
     {
         auto item = ItemsView.get_selected_item();
         signal_selected_item_changed.emit(item);
@@ -99,19 +99,19 @@ namespace gtkapp::views
         );
 
         view.signal_request_new_item.connect(
-            sigc::mem_fun(mainWindow, &MainWindow::OpenAddNewItem)
+            [&] { mainWindow.OpenAddNewItem(); }
         );
 
         view.signal_request_update_item.connect(
-            sigc::mem_fun(mainWindow, &MainWindow::OpenUpdateItem)
+            [&] (auto& item) { mainWindow.OpenUpdateItem(item); }
         );
 
         view.signal_request_delete_item.connect(
-            sigc::mem_fun(controller, &controllers::Controller::remove_Item)
+            [&] (auto& item) { controller.remove_Item(item); }
         );
 
         view.signal_selected_item_changed.connect(
-            sigc::mem_fun(controller, &controllers::Controller::select_item)
+            [&] (auto* item) { controller.select_item(item); }
         );
 
         controller.signal_item_selected().connect(

@@ -32,7 +32,7 @@ namespace gtkapp::views
         void on_add_clicked();
         void on_update_clicked();
         void on_delete_clicked();
-        void on_selected_item_changed();
+        void on_items_view_selected_item_changed();
     };
 
     void bind(MainWindow& mainWindow, controllers::Controller& controller, MainView& view);
