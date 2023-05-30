@@ -5,15 +5,15 @@
 #include <iostream>
 #include <optional>
 
-namespace gtkapp::controllers
+namespace gtkapp
 {
-    class Controller : public sigc::trackable
+    class Model : public sigc::trackable
     {
     private:
         
     public:
-        Controller();
-        ~Controller();
+        Model();
+        ~Model();
 
     private:
         template<typename T> static void OnPropertyChanged(T const& value, T& ref_value, sigc::signal<void(T const&)>& signal)

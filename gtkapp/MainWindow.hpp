@@ -1,5 +1,5 @@
 #pragma once
-#include <gtkapp/controllers/Controller.hpp>
+#include <gtkapp/Model.hpp>
 #include <gtkapp/NavigationWindow.hpp>
 #include <gtkmm.h>
 #include <string>
@@ -15,6 +15,6 @@ namespace gtkapp
         void OpenUpdateItem(models::Item & item);
 
     private:
-        controllers::Controller DataContext;
+        Model m_Model;
     };
 } // namespace gtkapp

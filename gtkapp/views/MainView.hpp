@@ -5,7 +5,6 @@
 #include <string>
 #include <memory>
 
-#include <gtkapp/controllers/Controller.hpp>
 #include <gtkapp/MainWindow.hpp>
 
 namespace gtkapp::views

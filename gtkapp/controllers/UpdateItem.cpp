@@ -6,13 +6,13 @@ namespace gtkapp::controllers
 {
     UpdateItem::UpdateItem(
         gtkapp::MainWindow& navigation,
-        Controller& controller,
+        Model& model,
         models::Item& item)
         :
         views::UpdateItem(),
         m_item_ref{ item },
         m_navigation{ navigation },
-        m_controller{ controller }
+        m_model{ model}
     {
         Item.set_item_values(m_item_ref);
     }
@@ -24,7 +24,7 @@ namespace gtkapp::controllers
 
     void UpdateItem::on_update_item(models::Item& item)
     {
-        m_controller.update_item(m_item_ref, item);
+        m_model.update_item(m_item_ref, item);
         m_navigation.OpenMainView();
     }
 }

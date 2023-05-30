@@ -1,5 +1,5 @@
 #pragma once
-#include <gtkapp/controllers/Controller.hpp>
+#include <gtkapp/Model.hpp>
 #include <gtkapp/MainWindow.hpp>
 #include <gtkapp/views/MainView.hpp>
 
@@ -8,7 +8,7 @@ namespace gtkapp::controllers
     class MainView : public views::MainView
     {
     public:
-        MainView(gtkapp::MainWindow& navigation, Controller& controller);
+        MainView(gtkapp::MainWindow& navigation, Model& model);
 
         void on_request_new_item() override;
         void on_delete_item(const models::Item& item) override;
@@ -17,6 +17,6 @@ namespace gtkapp::controllers
     
     private:
         gtkapp::MainWindow& m_navigation;
-        Controller& m_controller;
+        Model& m_model;
     };
 } // namespace gtkapp

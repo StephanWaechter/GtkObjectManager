@@ -2,7 +2,7 @@
 #include <gtkmm.h>
 #include <gtkapp/models/common.hpp>
 #include <gtkapp/widgets/ItemWidget.hpp>
-#include <gtkapp/controllers/Controller.hpp>
+#include <gtkapp/Model.hpp>
 #include <gtkapp/MainWindow.hpp>
 
 namespace gtkapp::views

@@ -6,11 +6,11 @@ namespace gtkapp::controllers
 {
     AddNewItem::AddNewItem(
         gtkapp::MainWindow& navigation,
-        Controller& controller) 
+        Model& model) 
         : 
         views::AddNewItem(),
         m_navigation{ navigation },
-        m_controller{ controller }
+        m_model{ model }
     {
     }
 
@@ -21,7 +21,7 @@ namespace gtkapp::controllers
 
     void AddNewItem::on_create_new_item(models::Item item)
     {
-        m_controller.add_Item(std::move(item));
+        m_model.add_Item(std::move(item));
         m_navigation.OpenMainView();
     }
 }

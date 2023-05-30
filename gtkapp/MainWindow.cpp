@@ -8,7 +8,7 @@ void gtkapp::MainWindow::OpenMainView()
     auto view = std::make_unique<controllers::MainView>
     (
         *this,
-        DataContext
+        m_Model
     );
     Open(std::move(view));
 }
@@ -18,7 +18,7 @@ void gtkapp::MainWindow::OpenAddNewItem()
     auto view = std::make_unique<controllers::AddNewItem>
     (
         *this,
-        DataContext
+        m_Model
     );
     Open(std::move(view));
 }
@@ -28,7 +28,7 @@ void gtkapp::MainWindow::OpenUpdateItem(models::Item & item)
     auto view = std::make_unique<controllers::UpdateItem>
         (
             *this,
-            DataContext,
+            m_Model,
             item
             );
     Open(std::move(view));
