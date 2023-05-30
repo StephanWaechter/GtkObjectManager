@@ -1,6 +1,6 @@
 #pragma once
 #include <gtkmm.h>
-#include <gtkapp/models/common.hpp>
+#include <gtkapp/types/common.hpp>
 #include <gtkapp/widgets/ItemWidget.hpp>
 
 namespace gtkapp::views
@@ -14,8 +14,8 @@ namespace gtkapp::views
 		Gtk::Button Create;
 		Gtk::Button Cancel;
 
-		sigc::signal<void(models::Item& item)> signal_create_new_item;
-		virtual void on_create_new_item(models::Item item);
+		sigc::signal<void(types::Item& item)> signal_create_new_item;
+		virtual void on_create_new_item(types::Item item);
 		sigc::signal<void(void)> signal_cancel;
 		virtual void on_cancel();
 

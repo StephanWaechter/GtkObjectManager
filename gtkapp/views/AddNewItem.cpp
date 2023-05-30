@@ -1,5 +1,5 @@
 #pragma once
-#include <gtkapp/models/common.hpp>
+#include <gtkapp/types/common.hpp>
 #include "AddNewItem.hpp"
 
 namespace gtkapp::views
@@ -64,7 +64,7 @@ namespace gtkapp::views
         signal_cancel.emit();
     }
 
-    void AddNewItem::on_create_new_item(models::Item item)
+    void AddNewItem::on_create_new_item(types::Item item)
     {
         signal_create_new_item.emit(
             item

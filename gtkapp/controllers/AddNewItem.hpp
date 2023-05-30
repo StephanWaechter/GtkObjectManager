@@ -9,7 +9,7 @@ namespace gtkapp::controllers
 	{
 		AddNewItem(gtkapp::MainWindow& navigation, Model& model);
 
-		void on_create_new_item(models::Item item) override;
+		void on_create_new_item(types::Item item) override;
 		void on_cancel() override;
 
 	private:

@@ -23,12 +23,12 @@ namespace gtkapp::widgets
 		return false;
 	}
 
-	models::Item ItemWidget::create_item()
+	types::Item ItemWidget::create_item()
 	{
-		return models::Item(Name.get_text());
+		return types::Item(Name.get_text());
 	}
 
-	void ItemWidget::set_item_values(const models::Item& item)
+	void ItemWidget::set_item_values(const types::Item& item)
 	{
 		Name.set_text( item.get_Name() );
 	}

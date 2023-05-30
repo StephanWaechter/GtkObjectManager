@@ -1,5 +1,5 @@
 #pragma once
-#include <gtkapp/models/common.hpp>
+#include <gtkapp/types/common.hpp>
 #include "UpdateItem.hpp"
 
 namespace gtkapp::views
@@ -53,7 +53,7 @@ namespace gtkapp::views
         );
     }
 
-    void UpdateItem::on_update_item(models::Item& item)
+    void UpdateItem::on_update_item(types::Item& item)
     {
         signal_update_item.emit(item);
     }

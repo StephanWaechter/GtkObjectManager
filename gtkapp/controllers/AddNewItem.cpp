@@ -1,5 +1,5 @@
 #pragma once
-#include <gtkapp/models/common.hpp>
+#include <gtkapp/types/common.hpp>
 #include "AddNewItem.hpp"
 
 namespace gtkapp::controllers
@@ -19,7 +19,7 @@ namespace gtkapp::controllers
         m_navigation.OpenMainView();
     }
 
-    void AddNewItem::on_create_new_item(models::Item item)
+    void AddNewItem::on_create_new_item(types::Item item)
     {
         m_model.add_Item(std::move(item));
         m_navigation.OpenMainView();

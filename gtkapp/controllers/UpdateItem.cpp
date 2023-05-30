@@ -1,5 +1,5 @@
 #pragma once
-#include <gtkapp/models/common.hpp>
+#include <gtkapp/types/common.hpp>
 #include "UpdateItem.hpp"
 
 namespace gtkapp::controllers
@@ -7,7 +7,7 @@ namespace gtkapp::controllers
     UpdateItem::UpdateItem(
         gtkapp::MainWindow& navigation,
         Model& model,
-        models::Item& item)
+        types::Item& item)
         :
         views::UpdateItem(),
         m_item_ref{ item },
@@ -22,7 +22,7 @@ namespace gtkapp::controllers
         m_navigation.OpenMainView();
     }
 
-    void UpdateItem::on_update_item(models::Item& item)
+    void UpdateItem::on_update_item(types::Item& item)
     {
         m_model.update_item(m_item_ref, item);
         m_navigation.OpenMainView();

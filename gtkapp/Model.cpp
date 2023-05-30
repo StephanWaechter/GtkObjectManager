@@ -1,6 +1,6 @@
 #include "Model.hpp"
 
-using namespace gtkapp::models;
+using namespace gtkapp::types;
 
 namespace gtkapp
 {
@@ -15,64 +15,64 @@ namespace gtkapp
     {
     }
 
-    sigc::signal<void(models::State const&)> Model::signal_state_changed() const
+    sigc::signal<void(types::State const&)> Model::signal_state_changed() const
     {
         return signal_state_changed_;
     }
 
-    models::State const& Model::get_State() const
+    types::State const& Model::get_State() const
     {
         return m_State;
     }
 
-    void Model::set_State(models::State const& value)
+    void Model::set_State(types::State const& value)
     {
         OnPropertyChanged(value, m_State, signal_state_changed_);
     }
 
-    models::Items& Model::get_Items()
+    types::Items& Model::get_Items()
     {
         return m_Items;
     }
 
-    sigc::signal<void(models::Item&)> Model::signal_item_updated() const
+    sigc::signal<void(types::Item&)> Model::signal_item_updated() const
     {
         return signal_item_updated_;
     }
 
-    sigc::signal<void(models::Item&)> Model::signal_item_added() const
+    sigc::signal<void(types::Item&)> Model::signal_item_added() const
     {
         return signal_item_added_;
     }
 
-    sigc::signal<void(models::Item const&)> Model::signal_item_removed() const
+    sigc::signal<void(types::Item const&)> Model::signal_item_removed() const
     {
         return signal_item_removed_;
     }
 
-    void Model::update_item(models::Item& item, models::Item const & new_values)
+    void Model::update_item(types::Item& item, types::Item const & new_values)
     {
         item.Update(new_values);
     }
 
-    void Model::add_Item(models::Item item)
+    void Model::add_Item(types::Item item)
     {
         m_Items.push_back(std::move(item));
         signal_item_added_.emit(m_Items.back());
     }
 
-    void Model::remove_Item(models::Item const& item)
+    void Model::remove_Item(types::Item const& item)
     {
         signal_item_removed_.emit(item);
         m_Items.remove(item);
     }
 
-    models::Item const* Model::get_selected_item() noexcept
+    types::Item const* Model::get_selected_item() noexcept
     {
         return m_selected_item;
     }
     
-    sigc::signal<void(models::Item const* item)> Model::signal_item_selected() const
+    sigc::signal<void(types::Item const* item)> Model::signal_item_selected() const
     {
         return signal_item_selected_;
     }

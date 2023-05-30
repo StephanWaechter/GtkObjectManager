@@ -55,7 +55,7 @@ namespace gtkapp::views
         std::cout << "~MainView" << std::endl;
     }
 
-    void MainView::set_selected_item(models::Item const* item)
+    void MainView::set_selected_item(types::Item const* item)
     {
         ItemsView.update_selection(item);
         Delete.set_sensitive(item != nullptr);
@@ -79,7 +79,7 @@ namespace gtkapp::views
         on_delete_item(*item);
     }
 
-    void MainView::on_delete_item(const models::Item& item)
+    void MainView::on_delete_item(const types::Item& item)
     {
         signal_delete_item.emit(item);
     }
@@ -91,7 +91,7 @@ namespace gtkapp::views
         on_update_item(*item);
     }
 
-    void MainView::on_update_item(models::Item& item)
+    void MainView::on_update_item(types::Item& item)
     {
         signal_update_item.emit(item);
     }
@@ -102,7 +102,7 @@ namespace gtkapp::views
         on_selected_item_changed(item);
     }
 
-    void  MainView::on_selected_item_changed(models::Item* item)
+    void  MainView::on_selected_item_changed(types::Item* item)
     {
         signal_selected_item_changed.emit(item);
     }

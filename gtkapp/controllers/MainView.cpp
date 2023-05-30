@@ -39,17 +39,17 @@ namespace gtkapp::controllers
         m_navigation.OpenAddNewItem();
     }
 
-    void MainView::on_delete_item(const models::Item& item)
+    void MainView::on_delete_item(const types::Item& item)
     {
         m_model.remove_Item(item);
     }
 
-    void MainView::on_update_item(models::Item& item)
+    void MainView::on_update_item(types::Item& item)
     {
         m_navigation.OpenUpdateItem(item);
     }
 
-    void  MainView::on_selected_item_changed(models::Item* item)
+    void  MainView::on_selected_item_changed(types::Item* item)
     {
         m_model.select_item(item);
     }

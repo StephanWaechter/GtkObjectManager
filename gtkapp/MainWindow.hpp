@@ -12,7 +12,7 @@ namespace gtkapp
     public:
         void OpenMainView();
         void OpenAddNewItem();
-        void OpenUpdateItem(models::Item & item);
+        void OpenUpdateItem(types::Item & item);
 
     private:
         Model m_Model;

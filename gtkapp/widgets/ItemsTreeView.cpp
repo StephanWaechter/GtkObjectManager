@@ -10,13 +10,13 @@ namespace gtkapp::widgets
         append_column("name", Columns_.name);
     }
 
-    models::Item * ItemsTreeView::get_selected_item()
+    types::Item * ItemsTreeView::get_selected_item()
     {
         auto row = get_selection()->get_selected();
         return (*row)[Columns_.item];
     }
 
-    void ItemsTreeView::add_item(models::Item & item)
+    void ItemsTreeView::add_item(types::Item & item)
     {
         auto id = item.get_Id();
         std::cout << "add " << item << " to view" << std::endl;
@@ -26,7 +26,7 @@ namespace gtkapp::widgets
         (*row)[Columns_.item] = &item;
     }
 
-    void ItemsTreeView::remove_item(models::Item const& item)
+    void ItemsTreeView::remove_item(types::Item const& item)
     {
         auto id = item.get_Id();
         auto& row = Item_to_row_[id];
@@ -34,7 +34,7 @@ namespace gtkapp::widgets
         Item_to_row_.erase(id);
     }
     
-    void ItemsTreeView::update_selection(models::Item const* item)
+    void ItemsTreeView::update_selection(types::Item const* item)
     {
         if (item != nullptr)
         {
@@ -51,7 +51,7 @@ namespace gtkapp::widgets
         return get_selection()->signal_changed();
     }
 
-    void ItemsTreeView::select_item(models::Item const& item)
+    void ItemsTreeView::select_item(types::Item const& item)
     {
         auto id = item.get_Id();
         auto& row = Item_to_row_[id];

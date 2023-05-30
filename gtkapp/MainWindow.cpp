@@ -23,7 +23,7 @@ void gtkapp::MainWindow::OpenAddNewItem()
     Open(std::move(view));
 }
 
-void gtkapp::MainWindow::OpenUpdateItem(models::Item & item)
+void gtkapp::MainWindow::OpenUpdateItem(types::Item & item)
 {
     auto view = std::make_unique<controllers::UpdateItem>
         (

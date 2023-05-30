@@ -3,7 +3,7 @@
 #include <string>
 #include <memory>
 
-namespace gtkapp::models
+namespace gtkapp::types
 {
     class Item
     {

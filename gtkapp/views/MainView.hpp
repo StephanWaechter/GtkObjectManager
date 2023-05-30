@@ -1,5 +1,5 @@
 #pragma once
-#include <gtkapp/models/common.hpp>
+#include <gtkapp/types/common.hpp>
 #include <gtkapp/widgets/ItemsTreeView.hpp>
 #include <gtkmm.h>
 #include <string>
@@ -19,14 +19,14 @@ namespace gtkapp::views
         
         sigc::signal<void(void)> signal_request_new_item;
         virtual void on_request_new_item();
-        sigc::signal<void(const models::Item& item)> signal_delete_item;
-        virtual void on_delete_item(const models::Item& item);
-        sigc::signal<void(models::Item& item)> signal_update_item;
-        virtual void on_update_item(models::Item& item);
-        sigc::signal<void(const models::Item* item)> signal_selected_item_changed;
-        virtual void on_selected_item_changed(models::Item* item);
+        sigc::signal<void(const types::Item& item)> signal_delete_item;
+        virtual void on_delete_item(const types::Item& item);
+        sigc::signal<void(types::Item& item)> signal_update_item;
+        virtual void on_update_item(types::Item& item);
+        sigc::signal<void(const types::Item* item)> signal_selected_item_changed;
+        virtual void on_selected_item_changed(types::Item* item);
         
-        void set_selected_item(models::Item const* item);
+        void set_selected_item(types::Item const* item);
     private:
         Gtk::Button Add;      
         Gtk::Button Update;

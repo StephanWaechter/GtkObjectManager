@@ -1,5 +1,5 @@
 #include <gtkmm.h>
-#include <gtkapp/models/common.hpp>
+#include <gtkapp/types/common.hpp>
 
 namespace gtkapp::widgets
 {
@@ -13,22 +13,22 @@ namespace gtkapp::widgets
                 add(item);
             }
             Gtk::TreeModelColumn<std::string> name;
-            Gtk::TreeModelColumn<models::Item *> item;
+            Gtk::TreeModelColumn<types::Item *> item;
         };
     public:
         ItemsTreeView();
-        models::Item * get_selected_item();
-        void add_item(models::Item & item);
-        void remove_item(models::Item const& item);
-        void update_selection(models::Item const* item);
+        types::Item * get_selected_item();
+        void add_item(types::Item & item);
+        void remove_item(types::Item const& item);
+        void update_selection(types::Item const* item);
         Glib::SignalProxy<void(void)> signal_selection_changed();
 
     private:
-        void select_item(models::Item const& item);
+        void select_item(types::Item const& item);
         void clear_selection();
 
         ItemColumn Columns_;
-        std::map <models::Item::Id, Gtk::TreeModel::iterator> Item_to_row_;
+        std::map <types::Item::Id, Gtk::TreeModel::iterator> Item_to_row_;
         Glib::RefPtr<Gtk::ListStore> ItemList_;
     };
 }

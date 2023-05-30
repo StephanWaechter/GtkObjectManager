@@ -1,6 +1,6 @@
 #pragma once
 #include <gtkmm.h>
-#include <gtkapp/models/common.hpp>
+#include <gtkapp/types/common.hpp>
 
 namespace gtkapp::widgets
 {
@@ -11,9 +11,9 @@ namespace gtkapp::widgets
 
 		sigc::signal<void(bool)> signal_is_valid_item_changed();
 		bool is_valid_item();
-		models::Item create_item();
+		types::Item create_item();
 
-		void set_item_values(const models::Item& item);
+		void set_item_values(const types::Item& item);
 
 	private:
 		sigc::signal<void(bool)> signal_is_valid_item_changed_;

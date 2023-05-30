@@ -2,7 +2,7 @@
 #include <list>
 #include "Item.hpp"
 
-namespace gtkapp::models
+namespace gtkapp::types
 {
     enum class State
     {
